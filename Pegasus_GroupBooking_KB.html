@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pegasus Airlines — Group Booking KB</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f5f5f3;color:#1a1a1a;font-size:15px;line-height:1.6}
+.page{max-width:900px;margin:0 auto;padding:1.5rem 1rem}
+.top-bar{display:flex;align-items:center;gap:10px;margin-bottom:1.25rem;flex-wrap:wrap;background:#fff;border:0.5px solid #e0e0d8;border-radius:12px;padding:.75rem 1rem}
+.airline-logo{background:#FF6000;color:#fff;font-size:13px;font-weight:600;padding:6px 16px;border-radius:8px}
+.search-wrap{flex:1;min-width:160px}
+.search-wrap input{width:100%;font-size:13px;padding:7px 12px;border:1px solid #d0d0c8;border-radius:8px;background:#fafaf8;color:#1a1a1a;outline:none}
+.search-wrap input:focus{border-color:#FF6000;background:#fff}
+.admin-bar{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.btn{padding:5px 13px;font-size:12px;border:1px solid #d0d0c8;border-radius:8px;background:#f5f5f3;color:#555;cursor:pointer;font-family:inherit}
+.btn:hover{background:#ebebeb}
+.btn-admin{background:#FF6000;color:#fff;border-color:#FF6000}
+.btn-admin:hover{background:#cc4d00}
+.btn-save{background:#EAF3DE;color:#3B6D11;border-color:#97C459}
+.btn-danger{background:#FCEBEB;color:#A32D2D;border-color:#F09595}
+.edit-bar{display:none;align-items:center;gap:8px;padding:8px 14px;background:#FAEEDA;border:1px solid #EF9F27;border-radius:8px;margin-bottom:1rem;font-size:12px;color:#633806}
+.edit-bar.active{display:flex}
+.tabs{display:flex;gap:6px;margin-bottom:1.25rem;flex-wrap:wrap}
+.tab{padding:5px 14px;font-size:12px;border:1px solid #d0d0c8;border-radius:8px;background:#fff;color:#555;cursor:pointer;white-space:nowrap;font-family:inherit}
+.tab:hover{background:#f0f0ee}
+.tab.active{background:#FF6000;color:#fff;border-color:#FF6000}
+.sec{margin-bottom:1.5rem}
+.sec-title{font-size:11px;font-weight:600;color:#888;text-transform:uppercase;letter-spacing:.7px;margin-bottom:.6rem}
+.card{background:#fff;border:1px solid #e8e8e0;border-radius:12px;padding:.9rem 1rem}
+.cards2{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+.tcard{background:#fff;border:1px solid #e8e8e0;border-radius:12px;overflow:hidden}
+.tcard table{width:100%;border-collapse:collapse;font-size:13px;table-layout:fixed}
+.tcard th{background:#f8f8f6;color:#888;font-weight:600;padding:7px 12px;text-align:left;border-bottom:1px solid #e8e8e0;font-size:11px;text-transform:uppercase;letter-spacing:.4px}
+.tcard td{padding:7px 12px;border-bottom:1px solid #f0f0ee;color:#1a1a1a;vertical-align:top;word-break:break-word}
+.tcard tr:last-child td{border-bottom:none}
+.tcard tr:hover td{background:#fafaf8}
+.tag{display:inline-block;font-size:11px;padding:2px 8px;border-radius:6px;font-weight:600}
+.tok{background:#EAF3DE;color:#2d6010}
+.twarn{background:#FAEEDA;color:#7a4a08}
+.tdanger{background:#FCEBEB;color:#8a2020}
+.tinfo{background:#E6F1FB;color:#0a3d7a}
+.clabel{font-size:11px;color:#888;margin-bottom:3px}
+.cval{font-size:15px;font-weight:600;color:#1a1a1a}
+.csub{font-size:11px;color:#888;margin-top:2px}
+.step{display:flex;gap:12px;align-items:flex-start;padding:.75rem 0;border-bottom:1px solid #f0f0ee}
+.step:last-child{border-bottom:none}
+.step-badge{min-width:40px;height:24px;border-radius:8px;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;padding:0 6px}
+.step-badge.agent{background:#FF6000;color:#fff}
+.step-badge.pegasus{background:#EAF3DE;color:#2d6010;border:1px solid #97C459}
+.step-badge.done{background:#EAF3DE;color:#2d6010}
+.step-body{flex:1}
+.step-title{font-size:13px;font-weight:600;color:#1a1a1a;margin-bottom:2px}
+.step-desc{font-size:12px;color:#666;line-height:1.55}
+.step-action{font-size:11px;margin-top:4px}
+.knowhow{background:#fffbf0;border:1px solid #EF9F27;border-radius:12px;padding:.9rem 1rem}
+.knowhow-title{font-size:11px;font-weight:600;color:#633806;text-transform:uppercase;letter-spacing:.5px;margin-bottom:.6rem}
+.knowhow-item{font-size:12px;color:#412402;line-height:1.6;padding:.35rem 0;border-bottom:1px solid #fae0a0;display:flex;gap:8px;align-items:flex-start}
+.knowhow-item:last-child{border-bottom:none}
+.ki-dot{width:6px;height:6px;border-radius:50%;background:#FF6000;flex-shrink:0;margin-top:5px}
+.ki-text{flex:1}
+.contact-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid #f0f0ee}
+.contact-row:last-child{border-bottom:none}
+.avatar{width:32px;height:32px;border-radius:50%;background:#FFE8D6;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;color:#CC4400;flex-shrink:0}
+.cname{font-size:13px;font-weight:600;color:#1a1a1a}
+.cdetail{font-size:11px;color:#666}
+.legend{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:.75rem;font-size:11px;color:#666}
+.legend-item{display:flex;align-items:center;gap:5px}
+[contenteditable="true"]{outline:2px dashed #FF6000;border-radius:3px;padding:1px 3px;cursor:text;min-width:20px}
+[contenteditable="true"]:focus{outline:2px solid #FF6000;background:#fff3ee}
+.del-btn{display:none;width:18px;height:18px;border-radius:50%;background:#FCEBEB;border:none;color:#A32D2D;font-size:11px;cursor:pointer;flex-shrink:0;align-items:center;justify-content:center;font-weight:700;padding:0;line-height:1}
+.edit-active .del-btn{display:flex}
+.add-row-btn{display:none;width:100%;padding:6px;font-size:11px;border:1px dashed #d0d0c8;border-radius:8px;background:transparent;color:#888;cursor:pointer;margin-top:6px;text-align:center;font-family:inherit}
+.add-row-btn:hover{background:#f5f5f3}
+.edit-active .add-row-btn{display:block}
+.modal-overlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.4);z-index:100;align-items:center;justify-content:center}
+.modal-overlay.open{display:flex}
+.modal{background:#fff;border-radius:14px;padding:1.5rem;min-width:260px;max-width:340px;box-shadow:0 8px 32px rgba(0,0,0,0.15)}
+.modal h3{font-size:16px;font-weight:600;margin-bottom:.9rem}
+.modal input{width:100%;margin-bottom:.75rem;font-size:14px;padding:8px 12px;border:1px solid #d0d0c8;border-radius:8px;color:#1a1a1a;font-family:inherit;outline:none}
+.modal input:focus{border-color:#FF6000}
+.modal-btns{display:flex;gap:8px;justify-content:flex-end}
+.modal-err{font-size:12px;color:#A32D2D;margin-bottom:.6rem;display:none}
+.footer{text-align:center;font-size:11px;color:#aaa;margin-top:2rem;padding-top:1rem;border-top:1px solid #e8e8e0}
+@media(max-width:600px){.cards2{grid-template-columns:1fr}.top-bar{flex-direction:column;align-items:stretch}}
+</style>
+</head>
+<body>
+<div class="modal-overlay" id="modal-bg">
+  <div class="modal">
+    <h3>Acces admin</h3>
+    <div class="modal-err" id="modal-err">Parola incorecta</div>
+    <input type="password" id="pw-input" placeholder="Parola..." onkeydown="if(event.key==='Enter')checkPw()">
+    <div class="modal-btns">
+      <button class="btn" onclick="closeModal()">Anuleaza</button>
+      <button class="btn btn-admin" onclick="checkPw()">Intra</button>
+    </div>
+  </div>
+</div>
+
+<div class="page">
+<div class="top-bar">
+  <div class="airline-logo">Pegasus Airlines (PC)</div>
+  <div class="search-wrap"><input type="text" id="srch" placeholder="Cauta proceduri, termene, contacte..." oninput="doSearch(this.value)"></div>
+  <div class="admin-bar">
+    <button class="btn btn-admin" id="edit-btn" onclick="toggleEdit()">Edit</button>
+    <button class="btn btn-save" id="export-btn" onclick="exportJSON()" style="display:none">Export JSON</button>
+    <label class="btn" id="import-lbl" style="display:none;cursor:pointer">Import JSON<input type="file" accept=".json" style="display:none" onchange="importJSON(this)"></label>
+    <button class="btn btn-danger" id="exit-btn" onclick="exitEdit()" style="display:none">Iesire edit</button>
+  </div>
+</div>
+
+<div class="edit-bar" id="edit-bar">Mod editare activ — click pe orice text pentru a-l modifica. Export JSON pentru a salva.</div>
+
+<div class="tabs">
+  <div class="tab active" onclick="showTab('all',this)">Toate</div>
+  <div class="tab" onclick="showTab('contacts',this)">Contacte</div>
+  <div class="tab" onclick="showTab('booking',this)">Booking process</div>
+  <div class="tab" onclick="showTab('deadlines',this)">Termene & plati</div>
+  <div class="tab" onclick="showTab('cancel',this)">Anulari</div>
+  <div class="tab" onclick="showTab('rules',this)">Reguli generale</div>
+  <div class="tab" onclick="showTab('knowhow',this)">Know-how intern</div>
+</div>
+
+<!-- CONTACTE -->
+<div class="sec" data-tab="contacts">
+  <div class="sec-title">Contacte</div>
+  <div class="tcard">
+    <div style="padding:.5rem .75rem" id="contacts-list">
+      <div class="contact-row s" data-id="c1"><div class="avatar">PG</div><div style="flex:1"><div class="cname" data-field="name">Pegasus Group Sales Support</div><div class="cdetail" data-field="detail">groupsalessupport@flypgs.com</div></div><button class="del-btn" onclick="delRow(this)">×</button></div>
+      <div class="contact-row s" data-id="c2"><div class="avatar">WB</div><div style="flex:1"><div class="cname" data-field="name">Portal rezervari grup</div><div class="cdetail" data-field="detail">www.flypgs.com → New Group Reservation</div></div><button class="del-btn" onclick="delRow(this)">×</button></div>
+      <div class="contact-row s" data-id="c3"><div class="avatar">HQ</div><div style="flex:1"><div class="cname" data-field="name">Pegasus HQ Istanbul</div><div class="cdetail" data-field="detail">Tel: +90 216 560 7632 | Fax: +90 216 560 7079</div></div><button class="del-btn" onclick="delRow(this)">×</button></div>
+    </div>
+    <button class="add-row-btn" onclick="addContact()">+ Adauga contact</button>
+  </div>
+</div>
+
+<!-- BOOKING PROCESS -->
+<div class="sec" data-tab="booking">
+  <div class="sec-title">Booking process — portal flypgs.com</div>
+  <div class="card s" style="margin-bottom:8px">
+    <div style="font-size:12px;font-weight:600;color:#888;margin-bottom:.75rem">Metoda: <span class="tag tinfo">Portal web propriu flypgs.com</span> — NU GDS, NU email direct</div>
+    <div class="legend">
+      <div class="legend-item"><div class="step-badge agent" style="font-size:10px;height:20px">Agent</div> Actiune agent</div>
+      <div class="legend-item"><div class="step-badge pegasus" style="font-size:10px;height:20px">PC</div> Actiune Pegasus</div>
+    </div>
+    <div id="steps-list">
+      <div class="step s" data-id="s1"><div class="step-badge agent">GR</div><div class="step-body"><div class="step-title" data-field="title">Creezi request pe portal</div><div class="step-desc" data-field="desc">flypgs.com → New Group Reservation. Completezi: ruta, data, nr pax (adult/child/infant), tip grup, Group Name (max 10 caractere), moneda, email. Bifezi T&amp;C. Click Search → selectezi zborurile → Submit.</div><div class="step-action"><span class="tag tinfo">Agent actioneaza</span></div></div><button class="del-btn" onclick="delRow(this)">×</button></div>
+      <div class="step s" data-id="s2"><div class="step-badge pegasus">GO</div><div class="step-body"><div class="step-title" data-field="title">Pegasus trimite oferta</div><div class="step-desc" data-field="desc">Pegasus insereaza tariful. Apare in "Request Queue Count". Verifici: clasa rezervare, tarif total, deposit %, data limita acceptare. ATENTIE: nu exista alocare de locuri inca.</div><div class="step-action"><span class="tag twarn">Agent trebuie sa actioneze</span></div></div><button class="del-btn" onclick="delRow(this)">×</button></div>
+      <div class="step s" data-id="s3"><div class="step-badge agent">OC</div><div class="step-body"><div class="step-title" data-field="title">Confirmi oferta</div><div class="step-desc" data-field="desc">Click "Offer Confirmed" in portal. Statusul ajunge automat la Pegasus. Inca nu exista alocare de locuri. Daca nu esti de acord: click "Offer Rejected".</div><div class="step-action"><span class="tag tinfo">Agent actioneaza</span></div></div><button class="del-btn" onclick="delRow(this)">×</button></div>
+      <div class="step s" data-id="s4"><div class="step-badge pegasus">PO</div><div class="step-body"><div class="step-title" data-field="title">Pegasus confirma + creeaza PNR automat</div><div class="step-desc" data-field="desc">PNR creat automat. Pegasus seteaza data limita pentru depozit. Urmareste "Last Date of Frozen Price" in sistem. Locurile sunt alocate acum.</div><div class="step-action"><span class="tag twarn">Agent trebuie sa actioneze</span></div></div><button class="del-btn" onclick="delRow(this)">×</button></div>
+      <div class="step s" data-id="s5"><div class="step-badge agent">DP</div><div class="step-body"><div class="step-title" data-field="title">Platesti depozitul + atasezi dovada</div><div class="step-desc" data-field="desc">Plata prin card sau transfer bancar. Click "Deposit Payment Done" → ataseaza documentul de plata. OBLIGATORIU: fara atasament sistemul nu permite confirmarea. Scrie MCO/INV nr. in nota platii.</div><div class="step-action"><span class="tag tinfo">Agent actioneaza</span></div></div><button class="del-btn" onclick="delRow(this)">×</button></div>
+      <div class="step s" data-id="s6"><div class="step-badge pegasus">DO</div><div class="step-body"><div class="step-title" data-field="title">Pegasus confirma depozitul</div><div class="step-desc" data-field="desc">Pegasus incarca suma in MCO-ul PNR. Se seteaza data limita pentru balance payment. Urmareste aceasta data din PNR.</div><div class="step-action"><span class="tag twarn">Agent trebuie sa actioneze</span></div></div><button class="del-btn" onclick="delRow(this)">×</button></div>
+      <div class="step s" data-id="s7"><div class="step-badge agent">BP</div><div class="step-body"><div class="step-title" data-field="title">Platesti balance + atasezi dovada</div><div class="step-desc" data-field="desc">Click "Balance Paid" → ataseaza documentul. Plata in orele de lucru: 07:30–16:00. Daca nu se confirma in timp, PNR se anuleaza automat.</div><div class="step-action"><span class="tag tinfo">Agent actioneaza</span></div></div><button class="del-btn" onclick="delRow(this)">×</button></div>
+      <div class="step s" data-id="s8"><div class="step-badge pegasus">BO</div><div class="step-body"><div class="step-title" data-field="title">Pegasus confirma balance</div><div class="step-desc" data-field="desc">Pegasus incarca suma in MCO. Se seteaza ultima data limita — pentru emitere bilete.</div><div class="step-action"><span class="tag twarn">Agent trebuie sa actioneze</span></div></div><button class="del-btn" onclick="delRow(this)">×</button></div>
+      <div class="step s" data-id="s9"><div class="step-badge done">TKT</div><div class="step-body"><div class="step-title" data-field="title">Emiti biletele</div><div class="step-desc" data-field="desc">In PNR: click Purchase → converteste moneda platii → bifezi T&amp;C → alegi MCO ticket → Purchase. Biletele se emit doar dupa plata integrala.</div><div class="step-action"><span class="tag tok">Finalizat</span></div></div><button class="del-btn" onclick="delRow(this)">×</button></div>
+    </div>
+    <button class="add-row-btn" onclick="addStep()">+ Adauga pas</button>
+  </div>
+</div>
+
+<!-- TERMENE -->
+<div class="sec" data-tab="deadlines">
+  <div class="sec-title">Termene & plati</div>
+  <div class="cards2 s" style="margin-bottom:10px">
+    <div class="card"><div class="clabel">Grup minim</div><div class="cval" data-editable>10 pax</div><div class="csub" data-editable>Sub 10 pax = tarife individuale</div></div>
+    <div class="card"><div class="clabel">Ore lucru plati</div><div class="cval" data-editable>07:30 – 16:00</div><div class="csub" data-editable>In afara orelor = PNR anulat automat</div></div>
+    <div class="card"><div class="clabel">Bagaj domestic</div><div class="cval" data-editable>15 kg</div><div class="csub" data-editable>Zbor intern Turcia</div></div>
+    <div class="card"><div class="clabel">Bagaj international</div><div class="cval" data-editable>20 kg</div><div class="csub" data-editable>International + Ercan (per zbor)</div></div>
+  </div>
+  <div class="tcard s" style="margin-bottom:10px">
+    <table>
+      <thead><tr><th style="width:45%">Actiune</th><th style="width:40%">Conditie</th><th></th></tr></thead>
+      <tbody id="deadlines-list">
+        <tr class="s" data-id="d1"><td data-field="action">Depozit — sarbatori (Eid, Craciun, etc.)</td><td data-field="val">25% — non-refundable</td><td><span class="tag tdanger">90% garantat</span><button class="del-btn" onclick="delRow(this)">×</button></td></tr>
+        <tr class="s" data-id="d2"><td data-field="action">Name change dupa emitere</td><td data-field="val">FOC pana la 10% din pax (o singura data via split PNR)</td><td><span class="tag tok">FOC</span><button class="del-btn" onclick="delRow(this)">×</button></td></tr>
+        <tr class="s" data-id="d3"><td data-field="action">Al doilea name change (acelasi pax)</td><td data-field="val">groupsalessupport@flypgs.com</td><td><span class="tag tinfo">Email support</span><button class="del-btn" onclick="delRow(this)">×</button></td></tr>
+        <tr class="s" data-id="d4"><td data-field="action">Penalizare copil/infant eronat</td><td data-field="val">50 EUR/segment/pax (international)</td><td><span class="tag tdanger">Penalizare</span><button class="del-btn" onclick="delRow(this)">×</button></td></tr>
+        <tr class="s" data-id="d5"><td data-field="action">Moneda grupuri din Turcia</td><td data-field="val">USD (outbound) — poate diferi inbound</td><td><span class="tag twarn">Curs valutar</span><button class="del-btn" onclick="delRow(this)">×</button></td></tr>
+        <tr class="s" data-id="d6"><td data-field="action">Moneda grupuri din Ercan</td><td data-field="val">EUR</td><td><button class="del-btn" onclick="delRow(this)">×</button></td></tr>
+        <tr class="s" data-id="d7"><td data-field="action">Refund MCO din anulari</td><td data-field="val">Valabil 1 an de la crearea PNR</td><td><span class="tag twarn">Expira</span><button class="del-btn" onclick="delRow(this)">×</button></td></tr>
+      </tbody>
+    </table>
+    <button class="add-row-btn" onclick="addDeadline()">+ Adauga rand</button>
+  </div>
+  <div class="sec-title">Conturi bancare — transfer</div>
+  <div class="tcard s">
+    <table>
+      <thead><tr><th style="width:30%">Banca (SWIFT)</th><th style="width:15%">Moneda</th><th>IBAN</th></tr></thead>
+      <tbody>
+        <tr class="s"><td>Garanti (TGBATRISXXX)</td><td>EUR</td><td style="font-family:'Courier New',monospace;font-size:11px" data-editable>TR45 0006 2000 3810 0009 0485 91</td></tr>
+        <tr class="s"><td>Garanti</td><td>USD</td><td style="font-family:'Courier New',monospace;font-size:11px" data-editable>TR18 0006 2000 3810 0009 0485 92</td></tr>
+        <tr class="s"><td>YKB (YAPITRISXXX)</td><td>EUR</td><td style="font-family:'Courier New',monospace;font-size:11px" data-editable>TR94 0006 7010 0000 0047 0620 30</td></tr>
+        <tr class="s"><td>YKB</td><td>USD</td><td style="font-family:'Courier New',monospace;font-size:11px" data-editable>TR82 0006 7010 0000 0047 0620 52</td></tr>
+        <tr class="s"><td>YKB</td><td>GBP</td><td style="font-family:'Courier New',monospace;font-size:11px" data-editable>TR36 0006 7010 0000 0076 0442 49</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ANULARI -->
+<div class="sec" data-tab="cancel">
+  <div class="sec-title">Anulari & modificari</div>
+  <div class="tcard s">
+    <table>
+      <thead><tr><th style="width:40%">Situatie</th><th>Conditii</th></tr></thead>
+      <tbody id="cancel-list">
+        <tr class="s" data-id="ca1"><td data-field="period">Dupa depozit, inainte de balance</td><td data-field="penalty">Poti reduce pax pana la 50% din initial (min 10 raman)</td></tr>
+        <tr class="s" data-id="ca2"><td data-field="period">Anulare — neticketat, &gt;48H</td><td data-field="penalty"><span class="tag tok">Pana la 10% din pax refund complet.</span> Peste 10%: taxe aeroport + check-in refund. Tarif de baza + fuel: non-refundable</td></tr>
+        <tr class="s" data-id="ca3"><td data-field="period">Anulare — neticketat, &lt;48H</td><td data-field="penalty">Taxe aeroport refund. Tarif + fuel non-refundable. Sub 2H: doar taxe aeroport</td></tr>
+        <tr class="s" data-id="ca4"><td data-field="period">Anulare — ticketat</td><td data-field="penalty">Modificari date/ruta: doar 10% din pax. Taxe aeroport + check-in: refund. Tarif + fuel: non-refundable</td></tr>
+        <tr class="s" data-id="ca5"><td data-field="period">Sarbatori (Eid, Craciun, etc.)</td><td data-field="penalty"><span class="tag tdanger">90% garantat — max 10% modificabil. Depozit 25% non-refundable</span></td></tr>
+      </tbody>
+    </table>
+    <button class="add-row-btn" onclick="addCancel()">+ Adauga rand</button>
+  </div>
+</div>
+
+<!-- REGULI -->
+<div class="sec" data-tab="rules">
+  <div class="sec-title">Reguli generale</div>
+  <div class="tcard s">
+    <table>
+      <thead><tr><th style="width:40%">Regula</th><th>Detalii</th></tr></thead>
+      <tbody id="rules-list">
+        <tr class="s" data-id="r1"><td data-field="rule">Bilete gratuite (FOC)</td><td data-field="detail"><span class="tag tdanger">Nu exista FOC tickets la Pegasus</span></td></tr>
+        <tr class="s" data-id="r2"><td data-field="rule">Tarif grup = individual?</td><td data-field="detail">Tarifele de grup NU pot fi folosite pentru bilete individuale</td></tr>
+        <tr class="s" data-id="r3"><td data-field="rule">Grup scade sub 10 pax</td><td data-field="detail">Procedurile de grup nu mai sunt valabile. Tarife individuale. Depozit platit — non-refundable</td></tr>
+        <tr class="s" data-id="r4"><td data-field="rule">Adaugare 1-9 pax la grup</td><td data-field="detail">Rezervari individuale in clase open. 10+ pax = nou request grup prin portal</td></tr>
+        <tr class="s" data-id="r5"><td data-field="rule">Check-in online</td><td data-field="detail">Disponibil pe flypgs.com. Nu se acumuleaza puncte Pegasus Plus</td></tr>
+        <tr class="s" data-id="r6"><td data-field="rule">Check-in la aeroport</td><td data-field="detail">Prezenta 2H inainte. Luggage + check-in finalizat cu 60 min inainte. Boarding se inchide cu 10 min inainte</td></tr>
+        <tr class="s" data-id="r7"><td data-field="rule">Pasageri PRM</td><td data-field="detail">Max 23 PRM/zbor. 1 insotitor per PRM care nu se descurca singur. 1 insotitor per 10 PRM general. 1 insotitor per 2 BLND</td></tr>
+        <tr class="s" data-id="r8"><td data-field="rule">Minori Cipru de Nord (&lt;18 ani)</td><td data-field="detail">Necesita scrisoare de consimtamant notariala</td></tr>
+      </tbody>
+    </table>
+    <button class="add-row-btn" onclick="addRule()">+ Adauga regula</button>
+  </div>
+</div>
+
+<!-- KNOW-HOW -->
+<div class="sec" data-tab="knowhow">
+  <div class="sec-title">Know-how intern</div>
+  <div class="knowhow">
+    <div class="knowhow-title">Note echipa — Anyway Travel</div>
+    <div id="knowhow-list">
+      <div class="knowhow-item s" data-id="k1"><div class="ki-dot"></div><div class="ki-text" data-field="text">Spre deosebire de LOT, Pegasus NU accepta request prin GDS sau email — totul se face exclusiv prin portalul flypgs.com.</div><button class="del-btn" onclick="delRow(this)">×</button></div>
+      <div class="knowhow-item s" data-id="k2"><div class="ki-dot"></div><div class="ki-text" data-field="text">Urmareste "Request Queue Count" in portal — daca ai grupuri acolo, trebuie sa actionezi. Nu vin notificari automate pe email intotdeauna.</div><button class="del-btn" onclick="delRow(this)">×</button></div>
+      <div class="knowhow-item s" data-id="k3"><div class="ki-dot"></div><div class="ki-text" data-field="text">ATENTIE la diferentele de curs valutar pentru round-trip: outbound in USD, inbound poate fi EUR sau alta moneda. Diferenta de curs e in sarcina agentiei.</div><button class="del-btn" onclick="delRow(this)">×</button></div>
+      <div class="knowhow-item s" data-id="k4"><div class="ki-dot"></div><div class="ki-text" data-field="text">Platile trebuie trimise cu dovada atasata in sistem inainte de 16:00. Pegasus nu isi asuma responsabilitatea daca plata nu e comunicata la timp si PNR cade din optiune.</div><button class="del-btn" onclick="delRow(this)">×</button></div>
+      <div class="knowhow-item s" data-id="k5"><div class="ki-dot"></div><div class="ki-text" data-field="text">Nu exista FOC tickets la Pegasus — diferenta importanta fata de LOT (unde exista 1 FOC per 15 pax la sport groups).</div><button class="del-btn" onclick="delRow(this)">×</button></div>
+      <div class="knowhow-item s" data-id="k6"><div class="ki-dot"></div><div class="ki-text" data-field="text">Name change dupa emitere: gratuit pana la 10% din grup, o singura data prin split PNR. Al doilea name change pe acelasi pax: email la groupsalessupport@flypgs.com.</div><button class="del-btn" onclick="delRow(this)">×</button></div>
+    </div>
+    <button class="add-row-btn" onclick="addKnowHow()">+ Adauga nota</button>
+  </div>
+</div>
+
+<div class="footer">Pegasus Airlines — Group Booking Knowledge Base | Anyway Travel | v1.0</div>
+</div>
+
+<script>
+const ADMIN_PW='anyway2024';
+let editMode=false;
+function toggleEdit(){document.getElementById('modal-bg').classList.add('open');setTimeout(()=>document.getElementById('pw-input').focus(),100);}
+function closeModal(){document.getElementById('modal-bg').classList.remove('open');document.getElementById('pw-input').value='';document.getElementById('modal-err').style.display='none';}
+function checkPw(){if(document.getElementById('pw-input').value===ADMIN_PW){closeModal();enterEdit();}else{document.getElementById('modal-err').style.display='block';document.getElementById('pw-input').value='';document.getElementById('pw-input').focus();}}
+function enterEdit(){editMode=true;document.querySelector('.page').classList.add('edit-active');document.getElementById('edit-bar').classList.add('active');document.getElementById('edit-btn').style.display='none';document.getElementById('export-btn').style.display='';document.getElementById('import-lbl').style.display='';document.getElementById('exit-btn').style.display='';document.querySelectorAll('[data-editable],[data-field]').forEach(el=>el.contentEditable='true');}
+function exitEdit(){editMode=false;document.querySelector('.page').classList.remove('edit-active');document.getElementById('edit-bar').classList.remove('active');document.getElementById('edit-btn').style.display='';document.getElementById('export-btn').style.display='none';document.getElementById('import-lbl').style.display='none';document.getElementById('exit-btn').style.display='none';document.querySelectorAll('[data-editable],[data-field]').forEach(el=>el.contentEditable='false');}
+function delRow(btn){btn.closest('[data-id]').remove();}
+function addContact(){const d=document.createElement('div');d.className='contact-row s';d.dataset.id='c'+Date.now();d.innerHTML=`<div class="avatar">??</div><div style="flex:1"><div class="cname" data-field="name" contenteditable="true">Nume contact</div><div class="cdetail" data-field="detail" contenteditable="true">email | telefon</div></div><button class="del-btn" onclick="delRow(this)" style="display:flex">×</button>`;document.getElementById('contacts-list').appendChild(d);}
+function addStep(){const n=document.querySelectorAll('#steps-list .step').length+1;const d=document.createElement('div');d.className='step s';d.dataset.id='s'+Date.now();d.innerHTML=`<div class="step-badge agent">${n}</div><div class="step-body"><div class="step-title" data-field="title" contenteditable="true">Titlu pas</div><div class="step-desc" data-field="desc" contenteditable="true">Descriere</div></div><button class="del-btn" onclick="delRow(this)" style="display:flex">×</button>`;document.getElementById('steps-list').appendChild(d);}
+function addDeadline(){const tr=document.createElement('tr');tr.className='s';tr.dataset.id='d'+Date.now();tr.innerHTML=`<td data-field="action" contenteditable="true">Actiune</td><td data-field="val" contenteditable="true">Conditie</td><td><button class="del-btn" onclick="delRow(this)" style="display:flex">×</button></td>`;document.getElementById('deadlines-list').appendChild(tr);}
+function addCancel(){const tr=document.createElement('tr');tr.className='s';tr.dataset.id='ca'+Date.now();tr.innerHTML=`<td data-field="period" contenteditable="true">Situatie</td><td data-field="penalty" contenteditable="true">Conditii</td>`;document.getElementById('cancel-list').appendChild(tr);}
+function addRule(){const tr=document.createElement('tr');tr.className='s';tr.dataset.id='r'+Date.now();tr.innerHTML=`<td data-field="rule" contenteditable="true">Regula</td><td data-field="detail" contenteditable="true">Detalii</td>`;document.getElementById('rules-list').appendChild(tr);}
+function addKnowHow(){const d=document.createElement('div');d.className='knowhow-item s';d.dataset.id='k'+Date.now();d.innerHTML=`<div class="ki-dot"></div><div class="ki-text" data-field="text" contenteditable="true">Nota noua...</div><button class="del-btn" onclick="delRow(this)" style="display:flex">×</button>`;document.getElementById('knowhow-list').appendChild(d);}
+function exportJSON(){const data={contacts:[],steps:[],deadlines:[],cancel:[],rules:[],knowhow:[],editables:[]};document.querySelectorAll('#contacts-list [data-id]').forEach(r=>data.contacts.push({name:r.querySelector('[data-field="name"]').textContent,detail:r.querySelector('[data-field="detail"]').textContent}));document.querySelectorAll('#steps-list [data-id]').forEach(r=>data.steps.push({title:r.querySelector('[data-field="title"]').textContent,desc:r.querySelector('[data-field="desc"]').textContent}));document.querySelectorAll('#deadlines-list [data-id]').forEach(r=>data.deadlines.push({action:r.querySelector('[data-field="action"]').textContent,val:r.querySelector('[data-field="val"]').textContent}));document.querySelectorAll('#cancel-list [data-id]').forEach(r=>data.cancel.push({period:r.querySelector('[data-field="period"]').textContent,penalty:r.querySelector('[data-field="penalty"]').textContent}));document.querySelectorAll('#rules-list [data-id]').forEach(r=>data.rules.push({rule:r.querySelector('[data-field="rule"]').textContent,detail:r.querySelector('[data-field="detail"]').textContent}));document.querySelectorAll('#knowhow-list [data-id]').forEach(r=>data.knowhow.push({text:r.querySelector('[data-field="text"]').textContent}));document.querySelectorAll('[data-editable]').forEach((el,i)=>data.editables.push({i,html:el.innerHTML}));const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:'application/json'}));a.download='Pegasus_data.json';a.click();}
+function importJSON(input){const r=new FileReader();r.onload=e=>{try{const data=JSON.parse(e.target.result);if(data.contacts){const cl=document.getElementById('contacts-list');cl.innerHTML='';data.contacts.forEach((c,i)=>{const d=document.createElement('div');d.className='contact-row s';d.dataset.id='c'+i;const init=(c.name||'??').substring(0,2).toUpperCase();d.innerHTML=`<div class="avatar">${init}</div><div style="flex:1"><div class="cname" data-field="name" contenteditable="true">${c.name}</div><div class="cdetail" data-field="detail" contenteditable="true">${c.detail}</div></div><button class="del-btn" onclick="delRow(this)" style="display:flex">×</button>`;cl.appendChild(d);});}if(data.steps){const sl=document.getElementById('steps-list');sl.innerHTML='';data.steps.forEach((s,i)=>{const d=document.createElement('div');d.className='step s';d.dataset.id='s'+i;d.innerHTML=`<div class="step-badge agent">${i+1}</div><div class="step-body"><div class="step-title" data-field="title" contenteditable="true">${s.title}</div><div class="step-desc" data-field="desc" contenteditable="true">${s.desc}</div></div><button class="del-btn" onclick="delRow(this)" style="display:flex">×</button>`;sl.appendChild(d);});}if(data.knowhow){const kl=document.getElementById('knowhow-list');kl.innerHTML='';data.knowhow.forEach((k,i)=>{const d=document.createElement('div');d.className='knowhow-item s';d.dataset.id='k'+i;d.innerHTML=`<div class="ki-dot"></div><div class="ki-text" data-field="text" contenteditable="true">${k.text}</div><button class="del-btn" onclick="delRow(this)" style="display:flex">×</button>`;kl.appendChild(d);});}if(data.editables){const els=document.querySelectorAll('[data-editable]');data.editables.forEach(e=>{if(els[e.i])els[e.i].innerHTML=e.html;});}alert('Import reusit!');}catch(err){alert('Eroare: '+err.message);}};r.readAsText(input.files[0]);}
+function showTab(tab,el){document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));el.classList.add('active');document.getElementById('srch').value='';document.querySelectorAll('[data-tab]').forEach(s=>s.style.display=(tab==='all'||s.dataset.tab===tab)?'':'none');document.querySelectorAll('.s').forEach(r=>r.style.display='');}
+function doSearch(q){const query=q.toLowerCase().trim();document.querySelectorAll('.tab')[0].click();if(!query){document.querySelectorAll('.s').forEach(r=>r.style.display='');return;}document.querySelectorAll('.s').forEach(r=>r.style.display=r.textContent.toLowerCase().includes(query)?'':'none');}
+</script>
+</body>
+</html>
